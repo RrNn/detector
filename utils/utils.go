@@ -9,10 +9,11 @@ import (
   "golang.org/x/crypto/bcrypt"
 )
 
+// https://pkg.go.dev/github.com/dgrijalva/jwt-go#DecodeSegment
 func CreateJwtToken(user *models.User) (t string, err error) {
   token := jwt.New(jwt.SigningMethodHS256)
   claims := token.Claims.(jwt.MapClaims)
-  claims["user_id"] = user.ID
+  claims["user_id"] = uint(user.ID)
   claims["name"] = user.Name
   claims["email"] = user.Email
   claims["address"] = user.Address
@@ -37,4 +38,7 @@ func CompareHashAndPassword(passwordHash string, password string) (matched bool)
     return false
   }
   return true
+}
+
+type JwtChecker struct {
 }

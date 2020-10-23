@@ -9,6 +9,7 @@ import (
 func main() {
   database.Migrate()
   routes.AttachRoutes()
+
   _ = app.Start()
 
 }

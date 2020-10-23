@@ -27,7 +27,7 @@ func Migrate() (database *gorm.DB, err error) {
   db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
   if db != nil {
-    if err = db.AutoMigrate(&models.User{}, &models.Url{}); err != nil {
+    if err = db.AutoMigrate(&models.User{}, &models.Url{}, &models.Ping{}); err != nil {
       return nil, err
     }
   }

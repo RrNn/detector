@@ -1,0 +1,32 @@
+package legacy
+
+// legacy code - pasting old code here
+
+// wg.Add(1)
+// go func() {
+//   for _ = range time.Tick(5 * time.Second) {
+//     for k := range urlsToPing {
+//       if resp, err := http.Get(urlsToPing[k].Link); err != nil {
+//         log.Print("An error occured: ", time.Now(), err)
+//       } else {
+//         count++
+//         fmt.Printf("URL : %s -- STATUS_CODE : %d\n", urlsToPing[k].Link, resp.StatusCode)
+//       }
+//     }
+//   }
+// }()
+// wg.Wait()
+/* ---------------------------------------------------------------------------------------------------------- */
+// for k := range urlsToPing {
+//   if resp, err := http.Get(urlsToPing[k].Link); err != nil {
+//     log.Print("An error occured: ", time.Now(), err)
+//   } else {
+//     count++
+//     fmt.Printf("URL : %s -- STATUS_CODE : %d\n", urlsToPing[k].Link, resp.StatusCode)
+//   }
+// }
+// if count == len(urlsToPing) {
+//   return "All URL's were pinged"
+// } else {
+//   return "Some URL's were not pinged"
+// }
