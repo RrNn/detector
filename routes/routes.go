@@ -4,15 +4,19 @@ import (
   "net/http"
 
   "github.com/RrNn/detector/app"
-  _ "github.com/RrNn/detector/app"
+  _ "github.com/RrNn/detector/app" // blank
   "github.com/RrNn/detector/constants"
   "github.com/RrNn/detector/controller"
   "github.com/RrNn/detector/database"
   "github.com/RrNn/detector/jobs"
+  _ "github.com/RrNn/detector/jobs" // blank
   "github.com/labstack/echo"
   "github.com/labstack/echo/middleware"
 )
 
+var env = constants.GetEnvironment()
+
+// AttachRoutes exported
 func AttachRoutes() (err error) {
   c := &controller.Controller{
     DB: database.Connect(),
@@ -26,12 +30,12 @@ func AttachRoutes() (err error) {
   auth := app.Group("/auth")
   auth.POST("/login", c.Login)
   auth.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-    SigningKey:  []byte(constants.JwtString),
+    SigningKey:  []byte(env.JwtString),
     TokenLookup: "header:Authorization",
     ContextKey:  "token",
   }))
 
-  auth.POST("/url", c.AddUrl)
+  auth.POST("/url", c.AddURL)
   auth.GET("/urls", c.GetUrls)
 
   return err

@@ -4,11 +4,11 @@ import "gorm.io/gorm"
 
 type User struct {
   gorm.Model
-  Name     string `gorm:"type:text" json:"Name"`
-  Email    string `gorm:"type:text; not null; unique;" json:"Email"`
-  Password string `gorm:"type:text; not null;" json:"Password"`
-  Address  string `gorm:"type:text; not null;" json:"Address"`
-  Contact  string `gorm:"type:text; not null; unique;" json:"Contact"`
+  Name     string `gorm:"type:text" json:"Name,omitempty"`
+  Email    string `gorm:"type:text; not null; unique;" json:"Email,omitempty"`
+  Password string `gorm:"type:text; not null;" json:"Password,omitempty"`
+  Address  string `gorm:"type:text; not null;" json:"Address,omitempty"`
+  Contact  string `gorm:"type:text; not null; unique;" json:"Contact,omitempty"`
 }
 
 type ReturnUser struct {
