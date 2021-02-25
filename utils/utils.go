@@ -9,6 +9,8 @@ import (
   "golang.org/x/crypto/bcrypt"
 )
 
+var env = constants.GetEnvironment()
+
 // https://pkg.go.dev/github.com/dgrijalva/jwt-go#DecodeSegment
 func CreateJwtToken(user *models.User) (t string, err error) {
   token := jwt.New(jwt.SigningMethodHS256)
@@ -19,7 +21,7 @@ func CreateJwtToken(user *models.User) (t string, err error) {
   claims["address"] = user.Address
   claims["contact"] = user.Contact
   claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
-  if t, err = token.SignedString([]byte(constants.JwtString)); err != nil {
+  if t, err = token.SignedString([]byte(env.JwtString)); err != nil {
     return t, err
   }
   return t, nil

@@ -3,8 +3,11 @@ package database
 import (
   "fmt"
   "log"
+  "os"
+  "time"
 
   "gorm.io/driver/postgres"
+  "gorm.io/gorm/logger"
 
   // _ "github.com/jinzhu/gorm/dialects/postgres"
 
@@ -13,17 +16,18 @@ import (
 
   "github.com/RrNn/detector/constants"
   "github.com/RrNn/detector/models"
-  "github.com/joho/godotenv"
 )
 
-var dsn string = fmt.Sprintf("user=%s dbname=%s port=%s sslmode=%s password=%s TimeZone=Africa/Kampala", constants.DBUser, constants.DBName, constants.DBPort, constants.DBSslmode, constants.DBPassword)
+func dsnString() string {
+  var env = constants.GetEnvironment()
+  return fmt.Sprintf(
+    "user=%s dbname=%s port=%s sslmode=%s password=%s TimeZone=Africa/Kampala",
+    env.DBUser, env.DBName, env.DBPort, env.DBSslmode, env.DBPassword)
+}
 
+// Migrate exported
 func Migrate() (database *gorm.DB, err error) {
-  err = godotenv.Load()
-  if err != nil {
-    log.Fatal("Error loading .env file", err)
-  }
-
+  var dsn string = dsnString()
   db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
   if db != nil {
@@ -35,8 +39,20 @@ func Migrate() (database *gorm.DB, err error) {
   return db, nil
 }
 
+// Connect exported
 func Connect() (db *gorm.DB) {
-  db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+  newLogger := logger.New(
+    log.New(os.Stdout, "\r\n", log.LstdFlags),
+    logger.Config{
+      SlowThreshold: time.Second,
+      LogLevel:      logger.Info,
+      Colorful:      true,
+    },
+  )
+  var dsn string = dsnString()
+  db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+    Logger: newLogger,
+  })
 
   if err != nil {
     log.Fatal("failed to connect database", err)
