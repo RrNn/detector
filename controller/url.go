@@ -1,6 +1,7 @@
 package controller
 
 import (
+  "fmt"
   "net/http"
   "strconv"
   "time"
@@ -51,6 +52,11 @@ func (cont *Controller) GetUrls(c echo.Context) (err error) {
   limit := c.QueryParam("limit")
   offset := c.QueryParam("offset")
 
+  token := c.Get("token").(*jwt.Token)
+  claims := token.Claims.(jwt.MapClaims)
+  fmt.Printf("Type__ %T", claims["user_id"])
+  id := int(claims["user_id"].(float64))
+
   urls := []models.Url{}
 
   query := cont.DB.Preload("User", func(db *gorm.DB) *gorm.DB {
@@ -64,7 +70,29 @@ func (cont *Controller) GetUrls(c echo.Context) (err error) {
     o, _ := strconv.Atoi(offset)
     query = query.Offset(o)
   }
-  query.Find(&urls)
+  query.Where("user_id = ?", id).Find(&urls)
 
   return c.JSON(http.StatusOK, urls)
+}
+
+// GetURL exported
+func (cont *Controller) GetURL(c echo.Context) (err error) {
+  id := c.Param("id")
+  withpings := c.QueryParam("withpings")
+  limit := c.QueryParam("limit")
+  offset := c.QueryParam("offset")
+  fmt.Println("withpings", withpings)
+  fmt.Println("limit", limit)
+  fmt.Println("offset", offset)
+
+  query := cont.DB
+  if withpings != "" {
+    query = query.Preload("Pings", func(db *gorm.DB) *gorm.DB {
+      // return db.Ping("*")
+      return db.Select("UrlID", "ID", "Status", "Error", "Time").Limit(1).Offset(0)
+    })
+  }
+  url := new(models.Url)
+  query.Where("id = ?", id).Find(&url)
+  return c.JSON(http.StatusOK, url)
 }
