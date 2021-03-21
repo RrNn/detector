@@ -1,7 +1,6 @@
 package controller
 
 import (
-  "fmt"
   "net/http"
   "strconv"
   "time"
@@ -54,7 +53,7 @@ func (cont *Controller) GetUrls(c echo.Context) (err error) {
 
   token := c.Get("token").(*jwt.Token)
   claims := token.Claims.(jwt.MapClaims)
-  fmt.Printf("Type__ %T", claims["user_id"])
+
   id := int(claims["user_id"].(float64))
 
   urls := []models.Url{}
@@ -81,9 +80,6 @@ func (cont *Controller) GetURL(c echo.Context) (err error) {
   withpings := c.QueryParam("withpings")
   limit := c.QueryParam("limit")
   offset := c.QueryParam("offset")
-  fmt.Println("withpings", withpings)
-  fmt.Println("limit", limit)
-  fmt.Println("offset", offset)
 
   query := cont.DB
   if withpings != "" {
