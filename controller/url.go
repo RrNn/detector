@@ -78,8 +78,8 @@ func (cont *Controller) GetUrls(c echo.Context) (err error) {
 func (cont *Controller) GetURL(c echo.Context) (err error) {
   id := c.Param("id")
   withpings := c.QueryParam("withpings")
-  limit := c.QueryParam("limit")
-  offset := c.QueryParam("offset")
+  // limit := c.QueryParam("limit")
+  // offset := c.QueryParam("offset")
 
   query := cont.DB
   if withpings != "" {
@@ -91,4 +91,17 @@ func (cont *Controller) GetURL(c echo.Context) (err error) {
   url := new(models.Url)
   query.Where("id = ?", id).Find(&url)
   return c.JSON(http.StatusOK, url)
+}
+
+// DeleteURL exported
+func (cont *Controller) DeleteURL(c echo.Context) (err error) {
+  id := c.Param("id")
+  query := cont.DB
+  var count int64
+  query.Model(&models.Url{}).Where("id = ?", id).Count(&count)
+  if count != 0 {
+    query.Delete(&models.Url{}, id)
+    return c.JSON(http.StatusAccepted, map[string]string{"message": "Link has been deleted"})
+  }
+  return c.JSON(http.StatusExpectationFailed, map[string]string{"message": "Either the link is already deleted or does not exist"})
 }
