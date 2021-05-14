@@ -23,8 +23,12 @@ func AttachRoutes() (err error) {
   }
   jobs.StartPinging(c)
   app := app.App
+  // app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+  //   AllowOrigins: []string{"http://127.0.0.1:8080", "http://localhost:8080"},
+  //   AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+  // }))
   app.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "welcome")
+    return c.JSON(http.StatusOK, map[string]string{"message": "welcome"})
   })
   app.POST("/register", c.Register)
   auth := app.Group("/auth")
