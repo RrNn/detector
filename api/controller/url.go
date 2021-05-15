@@ -92,13 +92,17 @@ func (cont *Controller) GetURL(c echo.Context) (err error) {
   query := cont.DB
   if withpings != "" {
     query = query.Preload("Pings", func(db *gorm.DB) *gorm.DB {
-      // return db.Select("*")
       return db.Select("UrlID", "ID", "Status", "Error", "Time").Limit(l).Offset(o).Order("ID desc")
     })
   }
+  var totalPings int64
+  query.Raw("SELECT count(*) FROM pings WHERE url_id = ?", id).Scan(&totalPings)
   url := new(models.Url)
   query.Where("id = ?", id).Find(&url)
-  return c.JSON(http.StatusOK, url)
+  return c.JSON(http.StatusOK, struct {
+    TotalPings int64
+    URL        *models.Url
+  }{TotalPings: totalPings, URL: url})
 }
 
 // DeleteURL exported
