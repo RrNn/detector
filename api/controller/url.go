@@ -1,7 +1,6 @@
 package controller
 
 import (
-  "fmt"
   "net/http"
   "strconv"
   "time"
@@ -81,14 +80,20 @@ func (cont *Controller) GetURL(c echo.Context) (err error) {
   withpings := c.QueryParam("withpings")
   limit := c.QueryParam("limit")
   offset := c.QueryParam("offset")
-  fmt.Println("limit", limit)   // convert to int to use on Limit
-  fmt.Println("offset", offset) // convert to int to use on Offset
+  l, err := strconv.Atoi(limit)
+  if err != nil {
+    l = 10
+  }
+  o, err := strconv.Atoi(offset)
+  if err != nil {
+    o = 0
+  }
 
   query := cont.DB
   if withpings != "" {
     query = query.Preload("Pings", func(db *gorm.DB) *gorm.DB {
       // return db.Select("*")
-      return db.Select("UrlID", "ID", "Status", "Error", "Time").Limit(20000).Offset(0).Order("ID desc")
+      return db.Select("UrlID", "ID", "Status", "Error", "Time").Limit(l).Offset(o).Order("ID desc")
     })
   }
   url := new(models.Url)
