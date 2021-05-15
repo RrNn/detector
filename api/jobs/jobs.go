@@ -29,7 +29,7 @@ func fetchUrls(cont *controller.Controller) (urls []models.Url) {
 
 func URLPinger(cont *controller.Controller) {
   var count int = 0
-  ticker := time.NewTicker(5 * time.Second)
+  ticker := time.NewTicker(30 * time.Second)
   go func() {
     urlsToPing := fetchUrls(cont)
     for {
