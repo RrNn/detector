@@ -69,9 +69,14 @@ func (cont *Controller) GetUrls(c echo.Context) (err error) {
     o, _ := strconv.Atoi(offset)
     query = query.Offset(o)
   }
-  query.Where("user_id = ?", id).Find(&urls)
+  query.Where("user_id = ?", id).Order("created_at desc").Find(&urls)
+  var totalUrls int64
+  query.Raw("SELECT count(*) FROM urls WHERE deleted_at is null and user_id = ?", id).Scan(&totalUrls)
 
-  return c.JSON(http.StatusOK, urls)
+  return c.JSON(http.StatusOK, struct {
+    TotalUrls int64
+    URLS      []models.Url
+  }{TotalUrls: totalUrls, URLS: urls})
 }
 
 // GetURL exported
@@ -96,7 +101,7 @@ func (cont *Controller) GetURL(c echo.Context) (err error) {
     })
   }
   var totalPings int64
-  query.Raw("SELECT count(*) FROM pings WHERE url_id = ?", id).Scan(&totalPings)
+  query.Raw("SELECT count(*) FROM pings WHERE deleted_at is NULL and url_id = ?", id).Scan(&totalPings)
   url := new(models.Url)
   query.Where("id = ?", id).Find(&url)
   return c.JSON(http.StatusOK, struct {
@@ -112,7 +117,18 @@ func (cont *Controller) DeleteURL(c echo.Context) (err error) {
   var count int64
   query.Model(&models.Url{}).Where("id = ?", id).Count(&count)
   if count != 0 {
-    query.Delete(&models.Url{}, id)
+    // manual cascaded delete
+    tx := query.Begin()
+    if tx.Where("id = ?", id).Delete(&models.Url{}); tx.Error != nil {
+      tx.Rollback()
+      return tx.Error
+    }
+    if tx.Where("url_id = ?", id).Delete(&models.Ping{}); tx.Error != nil {
+      tx.Rollback()
+      return tx.Error
+    }
+    tx.Commit()
+    // query.Delete(&models.Url{}, id)
     return c.JSON(http.StatusAccepted, map[string]string{"message": "Link has been deleted"})
   }
   return c.JSON(http.StatusExpectationFailed, map[string]string{"message": "Either the link is already deleted or does not exist"})
