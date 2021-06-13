@@ -62,4 +62,4 @@ In the `/api` dircetory, create your `.env` file with the following environment 
   After that;
 
 - In one terminal window, `cd api && go run main.go`
-- In another terminal window, `cd ui && npm run serve`
+- In another terminal window, `cd ui && npm install && npm run serve`

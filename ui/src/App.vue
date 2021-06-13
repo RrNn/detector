@@ -2,38 +2,35 @@
   <div id="app" v-if="name">
     <nav>
       <div>
-        <router-link exact :to="{ name: 'home' }">Home</router-link>
+        <router-link :to="{ name: 'home' }">Home</router-link>
         <router-link :to="{ name: 'about' }">About</router-link>
       </div>
       <div>
         <span class="user">{{ name }}</span>
-        <router-link @click="logout" :to="{ name: 'logout' }">
-          Logout
-        </router-link>
+        <button class="logout-btn" @click="logout">Logout</button>
       </div>
     </nav>
     <router-view></router-view>
   </div>
-  <login v-else></login>
+  <auth v-else></auth>
 </template>
 
 <script>
 import jwt_decode from 'jwt-decode';
 import emitter from './eventHub';
 import { storage } from './utils';
-import Login from './components/login';
+import Auth from './components/auth/index';
 export default {
   name: 'App',
   data: function () {
     return { name: '' };
   },
-  components: { Login },
+  components: { Auth },
   methods: {
     checkTokenValidity: function () {
       const token = storage.getItem('token');
       var decoded = token ? jwt_decode(token) : 'unauthorized';
-      if (decoded === 'unauthorized') this.$router.push('/login');
-      else this.name = decoded.name;
+      this.name = decoded?.name || '';
     },
     logout: function () {
       storage.removeItem('token');
@@ -84,6 +81,15 @@ export default {
       border-radius: 0.5rem;
       padding: 0.5rem 1rem;
       margin-right: 1rem;
+    }
+    .logout-btn {
+      background: transparent;
+      border: none;
+      color: $white;
+      font-size: 1.2rem;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
