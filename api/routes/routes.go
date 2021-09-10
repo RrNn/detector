@@ -42,6 +42,7 @@ func AttachRoutes() (err error) {
   auth.POST("/url", c.AddURL)
   auth.GET("/urls", c.GetUrls)
   auth.GET("/urls/:id", c.GetURL)
+  auth.GET("/urls/search", c.SearchURL)
   auth.DELETE("/urls/:id", c.DeleteURL)
 
   return err
