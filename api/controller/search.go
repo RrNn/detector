@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-// SearchURL for looking up a URL
+// SearchURL godoc
 // @Summary Search URL
 // @Description Search the DB for any string provided
 // @Produce json
