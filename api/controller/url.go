@@ -12,7 +12,12 @@ import (
   "github.com/labstack/echo"
 )
 
-// AddURL exported
+// AddURL godoc
+// @Summary Adds a URL to the DB
+// @Description Adds a URL posted by an authenticated user
+// @Produce json
+// @Success 201 {object} AddURL
+// @Router /auth/url [post]
 func (cont *Controller) AddURL(c echo.Context) (err error) {
   url := new(models.Url)
   token := c.Get("token").(*jwt.Token)
@@ -46,7 +51,12 @@ func (cont *Controller) AddURL(c echo.Context) (err error) {
   })
 }
 
-// GetUrls exported
+// GetUrls godoc
+// @Summary Gets URLS for an authenticated user
+// @Description Queries the DB for a users urls that have not been soft deleted
+// @Produce json
+// @Success 200 {object} AddURL
+// @Router /auth/url [get]
 func (cont *Controller) GetUrls(c echo.Context) (err error) {
   limit := c.QueryParam("limit")
   offset := c.QueryParam("offset")
@@ -79,7 +89,12 @@ func (cont *Controller) GetUrls(c echo.Context) (err error) {
   }{TotalUrls: totalUrls, URLS: urls})
 }
 
-// GetURL exported
+// GetURL godoc
+// @Summary Gets a URL by its ID for an authenticated user
+// @Description Queries the DB for a url that has not been soft deleted by its ID
+// @Produce json
+// @Success 200 {object} AddURL
+// @Router /auth/url/:id [get]
 func (cont *Controller) GetURL(c echo.Context) (err error) {
   id := c.Param("id")
   withpings := c.QueryParam("withpings")
@@ -110,7 +125,12 @@ func (cont *Controller) GetURL(c echo.Context) (err error) {
   }{TotalPings: totalPings, URL: url})
 }
 
-// DeleteURL exported
+// DeleteURL godoc
+// @Summary Delets a users url
+// @Description Soft Deletes a URL for the DB
+// @Produce json
+// @Success 200 {object} AddURL
+// @Router /auth/urls/:id [delete]
 func (cont *Controller) DeleteURL(c echo.Context) (err error) {
   id := c.Param("id")
   query := cont.DB
@@ -128,7 +148,6 @@ func (cont *Controller) DeleteURL(c echo.Context) (err error) {
       return tx.Error
     }
     tx.Commit()
-    // query.Delete(&models.Url{}, id)
     return c.JSON(http.StatusAccepted, map[string]string{"message": "Link has been deleted"})
   }
   return c.JSON(http.StatusExpectationFailed, map[string]string{"message": "Either the link is already deleted or does not exist"})
