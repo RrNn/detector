@@ -7,9 +7,9 @@ import (
   "sync"
   "time"
 
-  "github.com/RrNn/detector/controller"
-  "github.com/RrNn/detector/http"
-  "github.com/RrNn/detector/models"
+  "detector/controller"
+  "detector/http"
+  "detector/models"
 )
 
 func StartPinging(c *controller.Controller) {

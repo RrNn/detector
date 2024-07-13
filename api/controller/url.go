@@ -5,7 +5,7 @@ import (
   "strconv"
   "time"
 
-  "github.com/RrNn/detector/models"
+  "detector/models"
   "github.com/dgrijalva/jwt-go"
   "gorm.io/gorm"
 

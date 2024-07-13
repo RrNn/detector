@@ -3,8 +3,8 @@ package utils
 import (
   "time"
 
-  "github.com/RrNn/detector/constants"
-  "github.com/RrNn/detector/models"
+  "detector/constants"
+  "detector/models"
   "github.com/dgrijalva/jwt-go"
   "golang.org/x/crypto/bcrypt"
 )

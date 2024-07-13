@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/RrNn/detector/models"
+	"detector/models"
 	"github.com/labstack/echo"
 )
 

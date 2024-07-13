@@ -14,8 +14,8 @@ import (
   "gorm.io/gorm"
   // "github.com/jinzhu/gorm"
 
-  "github.com/RrNn/detector/constants"
-  "github.com/RrNn/detector/models"
+  "detector/constants"
+  "detector/models"
 )
 
 func dsnString() string {

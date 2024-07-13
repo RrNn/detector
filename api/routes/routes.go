@@ -3,13 +3,13 @@ package routes
 import (
   "net/http"
 
-  "github.com/RrNn/detector/app"
-  _ "github.com/RrNn/detector/app" // blank
-  "github.com/RrNn/detector/constants"
-  "github.com/RrNn/detector/controller"
-  "github.com/RrNn/detector/database"
-  "github.com/RrNn/detector/jobs"
-  _ "github.com/RrNn/detector/jobs" // blank
+  "detector/app"
+  _ "detector/app" // blank
+  "detector/constants"
+  "detector/controller"
+  "detector/database"
+  "detector/jobs"
+  _ "detector/jobs" // blank
   "github.com/labstack/echo"
   "github.com/labstack/echo/middleware"
 )
