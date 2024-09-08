@@ -30,7 +30,9 @@ func (cont *Controller) Register(c echo.Context) (err error) {
     return c.JSON(http.StatusInternalServerError, err)
   }
 
-  if t, err := utils.CreateJwtToken(user); err != nil {
+  t, err := utils.CreateJwtToken(user);
+
+  if err != nil {
     return c.JSON(http.StatusInternalServerError, err)
   }
   return c.JSON(http.StatusCreated, struct {
@@ -60,7 +62,8 @@ func (cont *Controller) Login(c echo.Context) (err error) {
   matched := utils.CompareHashAndPassword(user.Password, login.Password)
 
   if matched && user.Name != "" {
-    if t, err := utils.CreateJwtToken(user); err != nil {
+     t, err := utils.CreateJwtToken(user);
+     if err != nil {
       return c.JSON(http.StatusInternalServerError, err)
     }
     return c.JSON(http.StatusOK, map[string]string{
