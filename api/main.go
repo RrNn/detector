@@ -21,5 +21,4 @@ func main() {
 	routes.AttachRoutes()
 
 	_ = app.Start()
-
 }

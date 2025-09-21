@@ -1,9 +1,9 @@
 package controller
 
 import (
-  "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 type Controller struct {
-  DB *gorm.DB
+	DB *gorm.DB
 }
