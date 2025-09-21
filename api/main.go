@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/RrNn/detector/app"
-	"github.com/RrNn/detector/database"
-	"github.com/RrNn/detector/routes"
+	"detector/app"
+	"detector/database"
+	"detector/routes"
 	"github.com/joho/godotenv"
 )
 
@@ -21,5 +21,4 @@ func main() {
 	routes.AttachRoutes()
 
 	_ = app.Start()
-
 }

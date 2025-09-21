@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/RrNn/detector/models"
+	"detector/models"
 	"github.com/labstack/echo"
 )
 
@@ -14,7 +14,6 @@ import (
 // @Success 200 {object} SearchURL
 // @Router /auth/search [get]
 func (cont *Controller) SearchURL(c echo.Context) error {
-
 	url := c.QueryParam("url")
 
 	var urls []models.Url
@@ -22,5 +21,4 @@ func (cont *Controller) SearchURL(c echo.Context) error {
 	cont.DB.Where("link like ?", "%"+url+"%").Find(&urls)
 
 	return c.JSON(http.StatusOK, urls)
-
 }

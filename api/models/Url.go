@@ -2,7 +2,7 @@ package models
 
 import "gorm.io/gorm"
 
-//Url exported ...
+// Url exported ...
 type Url struct {
 	gorm.Model
 	Link   string `gorm:"type:text" json:"Link,omitempty"`
