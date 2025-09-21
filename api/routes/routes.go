@@ -23,27 +23,26 @@ func AttachRoutes() (err error) {
 	}
 	jobs.StartPinging(c)
 	app := app.App
-	// app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-	//   AllowOrigins: []string{"http://127.0.0.1:8080", "http://localhost:8080"},
-	//   AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	// }))
+
 	app.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"message": "welcome"})
 	})
 	app.POST("/register", c.Register)
 	auth := app.Group("/auth")
 	auth.POST("/login", c.Login)
-	auth.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+
+	v1 := app.Group("/api/v1")
+	v1.Use(middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningKey:  []byte(env.JwtString),
 		TokenLookup: "header:Authorization",
 		ContextKey:  "token",
 	}))
 
-	auth.POST("/url", c.AddURL)
-	auth.GET("/urls", c.GetUrls)
-	auth.GET("/urls/:id", c.GetURL)
-	auth.GET("/urls/search", c.SearchURL)
-	auth.DELETE("/urls/:id", c.DeleteURL)
+	v1.POST("/url", c.AddURL)
+	v1.GET("/urls", c.GetUrls)
+	v1.GET("/urls/:id", c.GetURL)
+	v1.GET("/urls/search", c.SearchURL)
+	v1.DELETE("/urls/:id", c.DeleteURL)
 
 	return err
 }
